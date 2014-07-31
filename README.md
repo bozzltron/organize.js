@@ -15,7 +15,7 @@ node organize.js
 Example config.json
 [
   {
-    "from" : "import"
+    "from" : "import",
     "types": "mp4, 3pg, mov, avi, mpg",
     "to": "[Video]/YYYY/MM-MMMM"
   },
