@@ -14,6 +14,7 @@ node organize.js
 
 Example config.json
 
+```javascript
   [
     {
       "from" : "import",
@@ -26,7 +27,7 @@ Example config.json
       "to": "[Pictures]/YYYY/MM-MMMM"
     }
   ]
-
+```
 
 ## Credits
 
