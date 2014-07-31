@@ -5,6 +5,8 @@ var moment = require("moment"),
 	config = null,
 	args = {};
 
+console.log("mode", process.env.mode);
+
 var organize = function(){
 
 	return {
@@ -49,7 +51,11 @@ var organize = function(){
 
 };
 
-organize().go();
+module.exports = organize;
+
+if(process.env.mode != "TEST") {
+	organize().go();
+}
 
 // Get files to organize
 
