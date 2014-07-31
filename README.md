@@ -4,7 +4,7 @@ A nodejs file organization tool.
 
 Command Line w/ params:
 
-node organize.js --from="." --to="[Photos]/MM-MMMM" --types="jpg,jpeg,gif,png"
+```node organize.js --from="." --to="[Photos]/MM-MMMM" --types="jpg,jpeg,gif,png"```
 
 Command line w/ config.json
 

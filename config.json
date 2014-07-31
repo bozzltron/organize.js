@@ -1,7 +1,7 @@
 [
 	{
 		"from": "/Volumes/bozzldrive/Import",
-		"types": "mp4,3pg,mov,avi,mpg",
+		"types": "mp4,3gp,mov,avi,mpg",
 		"to": "[Video]/YYYY/MM-MMMM"
 	},
     {
