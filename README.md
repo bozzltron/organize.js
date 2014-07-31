@@ -13,18 +13,20 @@ node organize.js
 -- assuming your have a config.json file in the same directory as organize.js
 
 Example config.json
-[
-  {
-    "from" : "import",
-    "types": "mp4, 3pg, mov, avi, mpg",
-    "to": "[Video]/YYYY/MM-MMMM"
-  },
+
+  [
     {
-    "from" : "import",
-    "types": "jpg, png, jpeg, gif",
-    "to": "[Pictures]/YYYY/MM-MMMM"
-  }
-]
+      "from" : "import",
+      "types": "mp4, 3pg, mov, avi, mpg",
+      "to": "[Video]/YYYY/MM-MMMM"
+    },
+      {
+      "from" : "import",
+      "types": "jpg, png, jpeg, gif",
+      "to": "[Pictures]/YYYY/MM-MMMM"
+    }
+  ]
+
 
 ## Credits
 
