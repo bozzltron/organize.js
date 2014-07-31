@@ -7,7 +7,7 @@ Command Line w/ params:
 ```node organize.js --from="." --to="[Photos]/YYYY/MM-MMMM" --types="jpg,jpeg,gif,png"```
 This will take files with the extension jpg, jpeg, gif, or png from the current directory and move them to the "Photos" directory and then into sub-folders based on the date of the file.  For example, if the files date is from February 2012, then the file would be moved to "Photos/2012/02-February/".
 
-The date placeholders are parsed by [moment.js][http://momentjs.com/].  Read the moment.js documentation for supported tokens.
+The date placeholders are parsed by [moment.js](http://momentjs.com/).  Read the moment.js documentation for supported tokens.
 
 Command line w/ config.json
 
