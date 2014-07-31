@@ -1,0 +1,10 @@
+[
+	{
+		"these-types-of-files": "mp4, 3pg, mov, avi, mpg",
+		"go-here": "[Video]/YYYY/MM-MMMM"
+	},
+    {
+		"these-types-of-files": "jpg, png, jpeg, gif",
+		"go-here": "[Pictures]/YYYY/MM-MMMM"
+	}
+]
