@@ -1,0 +1,24 @@
+{
+  "name": "organize.js",
+  "version": "0.0.0",
+  "description": "A nodejs file organization tool.",
+  "main": "organize.js",
+  "dependencies": {
+    "moment": "^2.7.0",
+    "underscore": "^1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bozzltron/organize.js.git"
+  },
+  "keywords": [
+    "file",
+    "organization"
+  ],
+  "author": "Michael Bosworth",
+  "license": "MIT"
+}
