@@ -1,12 +1,14 @@
 [
+    {
+    	"from": "/Volumes/bozzldrive/Import",
+		"types": "jpg,png,jpeg,gif",
+		"to": "[/Volumes/bozzldrive/Pictures]/YYYY/MM-MMMM",
+		"recursive": false,
+		"copy": false
+	},
 	{
 		"from": "/Volumes/bozzldrive/Import",
 		"types": "mp4,3gp,mov,avi,mpg",
 		"to": "[Video]/YYYY/MM-MMMM"
-	},
-    {
-    	"from": "/Volumes/bozzldrive/Import",
-		"types": "jpg,png,jpeg,gif",
-		"to": "[Pictures]/YYYY/MM-MMMM"
 	}
 ]
