@@ -118,36 +118,29 @@ var organize = function(){
 					fs.readdir(this.directory, this.getFiles);
 				}
 
+				this.areWeDone();
+
 			} else {
 							
 				// handle file
 				console.log("handle file", this.file);
-				console.log("its a file", this.fullPath, path.extname(this.file));
 				var ext = path.extname(this.file).replace(".","");
-				console.log("ext", ext);
-				if( _.contains( this.job.types.split(','), ext ) ) {
-					
-					this.getExif();
-
-				}
 
 				// tally up how many files for each extension were processed
 				if(!this.report[ext]) {
 					this.report[ext] = 0;
 				}
-
 				this.report[ext]++;
+		
+				if( _.contains( this.job.types.split(','), ext ) ) {
+					
+					this.getExif();
 
-			}
+				} else {
+					this.areWeDone();
+				}
 
-			this.processed++;
 
-			// Write report or keep going ?
-			if(this.processed == this.files.length) {
-				this.writeReport();
-			} else {
-				this.index++;
-				this.processFile();
 			}
 
 			
@@ -173,11 +166,25 @@ var organize = function(){
 	        }
 	        else {
 
-		        console.log(image.exif.CreateDate);
-	            var destinationDirectory = moment(new Date(image.exif.CreateDate.split(" ")[0])).format(this.job.to);
-	            this.job.files.push({source: this.fullPath, destination: destinationDirectory + '/' + this.file});
+	        	if(image.exif.CreateDate) {
+		        	console.log(image.exif.CreateDate);
+	            	var destinationDirectory = moment(new Date(image.exif.CreateDate.split(" ")[0])).format(this.job.to);
+	            	this.job.files.push({source: this.fullPath, destination: destinationDirectory + '/' + this.file});
+	        	}
 	        }
-			    
+			   
+			this.areWeDone();
+		},
+
+		areWeDone: function() {
+			// Write report or keep going ?
+			this.processed++;
+			if(this.processed == this.files.length) {
+				this.writeReport();
+			} else {
+				this.index++;
+				this.processFile();
+			}
 		},
 
 		writeReport: function() {
@@ -187,7 +194,7 @@ var organize = function(){
 		    	console.log("Found " + num + " " + ext + " files");
 		    });
 		    console.log(this.job.files);
-		    
+
 		},
 
 	};
