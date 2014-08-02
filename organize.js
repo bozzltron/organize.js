@@ -4,6 +4,7 @@ var moment = require("moment"),
 	cwd = process.cwd(),
 	path = require("path"),
 	ExifImage = require('exif').ExifImage;
+	Job = require("./job");
 
 // organize.js
 var organize = function(){
@@ -16,7 +17,7 @@ var organize = function(){
 
 		go : function() {
 
-			_.bindAll(this, 'parseArgs', 'processJob', 'parseConfig', 'getFiles', 'processFile', 'checkForDirectory', 'calculateDesination');
+			_.bindAll(this, 'parseArgs', 'parseConfig', 'jobDone');
 
 			if( process.argv.length > 2 ) {
 
@@ -46,13 +47,13 @@ var organize = function(){
 
 		beginProcess: function() {
 
-			this.startTime = new Date().getTime();
 
 			if(_.isArray(this.args)) {
-				//this.args.forEach(this.processJob);
-				this.processJob(this.args[0]);
+				this.processed = 0;
+				new Job(this.args[0], this.jobDone).start();
 			} else {
 				this.processJob(this.args);
+				new Job(this.args, this.jobDone).start();
 			}
 
 		},
@@ -66,136 +67,10 @@ var organize = function(){
 
 		},
 
-		processJob: function(job, index) {
-
-			console.log("processing job");
-			this.job = job;
-			this.job.files = [];
-			this.processed = 0;
-			this.directory = job.from;
-			fs.readdir(this.directory, this.getFiles);
-
-		},
-
-		getFiles: function (err, files) {
-
-			console.log("getFiles");
-		    if (err) {
-		        throw err;
-		    }
-		    
-		    //files.forEach(this.processFile);
-		    this.files = files;
-		    this.index = 0;
-		    this.processFile();
-		   
-		},
-
-		processFile: function() {
-
-			// handle directory
-			console.log("process file");
-			this.file = this.files[this.index];
-			this.fullPath = this.directory + "/" + this.file;
-			fs.stat(this.fullPath, this.checkForDirectory);
-
-		},
-
-		checkForDirectory: function(err, stat) {
-
-			console.log("checkForDirectory");
-		    if (err) {
-		        throw(err);
-		    }
-
-		    // handle directory
-			if(stat.isDirectory()) {
-
-				console.log("handle directory");
-				if(this.job.recursive) {	
-					this.directory = this.fullPath;
-					console.log("loading", this.directory);
-					fs.readdir(this.directory, this.getFiles);
-				}
-
-				this.areWeDone();
-
-			} else {
-							
-				// handle file
-				console.log("handle file", this.file);
-				var ext = path.extname(this.file).replace(".","");
-
-				// tally up how many files for each extension were processed
-				if(!this.report[ext]) {
-					this.report[ext] = 0;
-				}
-				this.report[ext]++;
-		
-				if( _.contains( this.job.types.split(','), ext ) ) {
-					
-					this.getExif();
-
-				} else {
-					this.areWeDone();
-				}
-
-
-			}
-
-			
-		},
-
-		getExif: function() {
-			console.log("getExif");
-			try {
-
-			    new ExifImage({ image : this.fullPath }, this.calculateDesination);
-
-			} catch (error) {
-			    console.log('Error: ' + error);
-			}
-
-		},
-
-		calculateDesination: function(error, image) {
-
-			console.log("calculateDesination");
-	        if (error) {
-	            console.log('Error: ' + error.message);
-	        }
-	        else {
-
-	        	if(image.exif.CreateDate) {
-		        	console.log(image.exif.CreateDate);
-	            	var destinationDirectory = moment(new Date(image.exif.CreateDate.split(" ")[0])).format(this.job.to);
-	            	this.job.files.push({source: this.fullPath, destination: destinationDirectory + '/' + this.file});
-	        	}
-	        }
-			   
-			this.areWeDone();
-		},
-
-		areWeDone: function() {
-			// Write report or keep going ?
+		jobDone: function(job){
 			this.processed++;
-			if(this.processed == this.files.length) {
-				this.writeReport();
-			} else {
-				this.index++;
-				this.processFile();
-			}
-		},
-
-		writeReport: function() {
-
-			console.log("Files processed: " + this.job.files.length);
-		    _.each(this.report, function(num, ext){
-		    	console.log("Found " + num + " " + ext + " files");
-		    });
-		    console.log(this.job.files);
-
-		},
+			console.log("Processed " + this.processed + " of " + this.args.length + " jobs.");
+		}
 
 	};
 
