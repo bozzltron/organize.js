@@ -16,6 +16,7 @@ var Job = function(job, callback){
 			directory: 0,
 			noext: 0,
 			noexif: 0,
+			copyfail:0,
 			ext: {}
 		},
 
@@ -53,13 +54,23 @@ var Job = function(job, callback){
 
 			switch(report.status){
 				case "directory":
+
 					this.report.directory++;
+					if(this.job.recursive) {	
+						var job = _.clone(this.job);
+						job.from = report.file;
+						new Job(job, this.fileDone).start();
+					}
+
 				break;
 				case "noext":
 					this.report.noext++;
 				break;
 				case "noexif":
 					this.report.noexif++;
+				break;
+				case "copyfail":
+					this.report.copyfail++;
 				break;
 				case "success":
 
@@ -94,6 +105,7 @@ var Job = function(job, callback){
            console.log("	Ignored " + this.report.noext + " files.");
 		   console.log("	Found " + this.report.directory + " directories.");
 		   console.log("	Found " + this.report.noexif + " files with no exif data.");
+		   console.log("	" + this.report.copyfail + " failed to copy.");
            _.each(this.report.ext, function(num, ext){
                console.log("	Found " + num + " " + ext + " files.");
            });

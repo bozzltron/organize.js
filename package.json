@@ -4,9 +4,10 @@
   "description": "A nodejs file organization tool.",
   "main": "organize.js",
   "dependencies": {
+    "exif": "^0.4.0",
+    "mkdirp": "^0.5.0",
     "moment": "^2.7.0",
-    "underscore": "^1.6.0",
-    "exif": "^0.4.0"
+    "underscore": "^1.6.0"
   },
   "devDependencies": {
     "jasmine-node": "^1.14.5"

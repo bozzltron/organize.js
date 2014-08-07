@@ -3,7 +3,8 @@ var moment = require("moment"),
 	fs = require("fs"),
 	cwd = process.cwd(),
 	path = require("path"),
-	ExifImage = require('exif').ExifImage;
+	ExifImage = require('exif').ExifImage,
+	mkdirp = require('mkdirp');
 
 // organize.js
 var FileProcessor = function(file, directory, job, callback){
@@ -12,7 +13,7 @@ var FileProcessor = function(file, directory, job, callback){
 
 		start: function() {
 
-			_.bindAll(this, 'checkForDirectory', 'getExif', 'calculateDesination');
+			_.bindAll(this, 'checkForDirectory', 'getExif', 'calculateDesination', 'stream', 'error', 'success');
 
 			this.callback = callback;
 			this.directory = directory;
@@ -34,13 +35,7 @@ var FileProcessor = function(file, directory, job, callback){
 			if(stat.isDirectory()) {
 
 				console.log("handle directory");
-				if(this.job.recursive) {	
-					this.directory = this.fullPath;
-					console.log("loading", this.directory);
-					fs.readdir(this.directory, this.getFiles);
-				}
-
-				this.callback({status:"directory", file: this.file});
+				this.callback({status:"directory", file: this.fullPath});
 
 			} else {
 							
@@ -61,13 +56,8 @@ var FileProcessor = function(file, directory, job, callback){
 
 		getExif: function() {
 			console.log("getExif");
-			try {
-
-			    new ExifImage({ image : this.fullPath }, this.calculateDesination);
-
-			} catch (error) {
-			    this.callback({status:"noexif", file:this.file});
-			}
+		
+			new ExifImage({ image : this.fullPath }, this.calculateDesination);
 
 		},
 
@@ -76,18 +66,69 @@ var FileProcessor = function(file, directory, job, callback){
 			console.log("calculateDesination");
 	        if (error) {
 	            console.log('Error: ' + error.message);
+	            this.callback({status:"noexif", file:this.file});
 	        }
 	        else {
 
 	        	if(image.exif.CreateDate) {
-		        	console.log(image.exif.CreateDate);
-	            	var destinationDirectory = moment(new Date(image.exif.CreateDate.split(" ")[0])).format(this.job.to);
-	            	this.processedFile = {source: this.fullPath, destination: destinationDirectory + '/' + this.file};
+		        	var colons = /\:/gi;
+		        	console.log(image.exif.CreateDate.split(" ")[0].replace(colons,"-"));
+		        	var date = new Date(image.exif.CreateDate.split(" ")[0].replace(colons,"-"));
+		        	console.log(date);
+		        	console.log("moment format", moment(date).format(this.job.to));
+	            	var destinationDirectory = moment(date).format(this.job.to);
+	            	this.processedFile = {source: this.fullPath, destination: destinationDirectory};
+
+	            	if(this.job.dryrun) {  
+						this.callback({status:"success", file:this.processedFile, ext:this.ext});
+					} else {
+						this.copy(this.processedFile.source, this.processedFile.destination);
+					}
 	        	}
 	        }
-			   
-			this.callback({status:"success", file:this.processedFile, ext:this.ext});
+			
+		},
+
+		copy: function (source, target) {
+			console.log("copy things");
+		
+			if(source && target) {
+				console.log("making " + this.destination);
+				mkdirp(this.processedFile.destination, this.stream);
+			} else {
+				console.log("copyfail", source, target);
+				this.callback({status:"copyfail", file:this.file});
+			}
+
+		},
+
+		stream: function(err) {
+			console.log("stream");
+			if (err) console.error(err);
+
+			var source = this.processedFile.source;
+			var target = this.processedFile.destination + "/" + this.file;
+			var rd = fs.createReadStream(source);
+			rd.on("error", this.error);
+
+			var wr = fs.createWriteStream(target);
+			wr.on("error", this.error);
+
+			wr.on("close", this.success);
+
+			rd.pipe(wr);
+
+		},
+
+		error:function(err){
+			console.log(err);
+			this.callback({status:"copyfail", file:this.file});
+		},
+
+		success: function(ex) {
+			this.callback({status:"success", file:this.file});
 		}
+
 	};
 
 };
