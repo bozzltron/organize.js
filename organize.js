@@ -26,9 +26,10 @@ var organize = function(){
 				this.beginProcess();
 
 			} else {
-				console.log("check for config.json");
+
 				// Check for a config.JSON
 				fs.exists(cwd + '/config.json', this.parseConfig);
+
 			}
 
 		},
@@ -36,24 +37,29 @@ var organize = function(){
 		parseConfig: function(exists){
 
 			if(exists) {
+
 				this.args = require(cwd + '/config.json');
-				console.log("config file parsed");
 				this.beginProcess();
+
 			} else {
-				console.log('For Usage : See README.md');
+
+				throw Error("No parameters and no config file were provided.");
+
 			}
 
 		},
 
 		beginProcess: function() {
 
-
 			if(_.isArray(this.args)) {
+
 				this.processed = 0;
 				new Job(this.args[0], this.jobDone).start();
+
 			} else {
-				this.processJob(this.args);
+
 				new Job(this.args, this.jobDone).start();
+
 			}
 
 		},
@@ -61,6 +67,9 @@ var organize = function(){
 		parseArgs : function(arg, index) {
 
 			if(index > 1) {
+				if(arg.indexOf("=") == -1 || arg.indexOf("--") == -1) {
+					throw Error('Invalid argument(s) : Example --param="value".');
+				}
 				var stripDashes = arg.replace("--", "");
 				this.args[stripDashes.split("=")[0]] = stripDashes.split("=")[1];
 			}
