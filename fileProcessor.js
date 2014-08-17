@@ -48,9 +48,7 @@ var FileProcessor = function(file, directory, job, callback){
 					this.callback({status:"noext", file:this.file});
 				}
 
-
 			}
-
 			
 		},
 
