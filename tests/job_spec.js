@@ -15,7 +15,7 @@ describe("job.js", function() {
     it("should get files in a directory", function(done){
 
     	var job = new Job(config, function(){
-        	console.log("done");
+        
         });
 
         job.getFiles = function(err, files){
@@ -30,7 +30,7 @@ describe("job.js", function() {
     it("should process files", function(done){
 
         var job = new Job(config, function(){
-            console.log("done");
+           
         });
 
         var count = 0;

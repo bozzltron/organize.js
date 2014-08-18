@@ -39,7 +39,6 @@ var Job = function(job, callback){
 
 		getFiles: function (err, files) {
 
-			console.log("getFiles", files);
 		    if (err) {
 		        console.log(err);
 		    }
@@ -52,13 +51,15 @@ var Job = function(job, callback){
 
 		fileDone:function(report) {
 
+			report.file.print();
+
 			switch(report.status){
 				case "directory":
 
 					this.report.directory++;
 					if(this.job.recursive) {	
 						var job = _.clone(this.job);
-						job.from = report.file;
+						job.from = report.file.source;
 						new Job(job, this.fileDone).start();
 					}
 
@@ -75,10 +76,10 @@ var Job = function(job, callback){
 				case "success":
 
 					// tally up how many files for each extension were processed
-					if(!this.report.ext[report.ext]) {
-						this.report.ext[report.ext] = 0;
+					if(!this.report.ext[report.file.ext]) {
+						this.report.ext[report.file.ext] = 0;
 					}
-					this.report.ext[report.ext]++;
+					this.report.ext[report.file.ext]++;
 
 					this.processedFiles.push(report.file);
 
