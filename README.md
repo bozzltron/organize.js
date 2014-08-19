@@ -38,12 +38,14 @@ Example config.json
 
 ## Parameters
 
- from      - (required) Source directory
- to        - (required) Destination directory
- types     - (required) the file types that apply to each job
- recursive - (optional, default = true) when true digs into and processes subdirectories
- move      - (optional, default = false) deletes the source file after copying to the destination
- dryrun    - (optional, default = false) allows you to see where files will go, but doesn't actually process them
+Parameter  | Description
+------------- | -------------
+from      | (required) Source directory
+to        | (required) Destination directory
+types     | (required) the file types that apply to each job
+recursive | (optional, default = true) when true digs into and processes subdirectories
+move      | (optional, default = false) deletes the source file after copying to the destination
+dryrun    | (optional, default = false) allows you to see where files will go, but doesn't actually process them
 
 ## Credits
 
