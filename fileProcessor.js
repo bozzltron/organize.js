@@ -29,7 +29,7 @@ var FileProcessor = function(file, directory, job, callback){
 
 		start: function() {
 
-			_.bindAll(this, 'checkForDirectory', 'getExif', 'calculateDesination', 'stream', 'error', 'success');
+			_.bindAll(this, 'checkForDirectory', 'getExif', 'calculateDesination', 'stream', 'error', 'success', 'unlink');
 			
 			this.callback = callback;
 			this.directory = directory;
@@ -43,7 +43,9 @@ var FileProcessor = function(file, directory, job, callback){
 		checkForDirectory: function(err, stat) {
 
 		    if (err) {
-		        throw(err);
+		    	this.report.status = "Failed";
+		    	this.report.scenario = "File Status : " + err;
+		        this.callback({status:"statfail", file: this.report});
 		    }
 
 		    // handle directory
@@ -72,7 +74,7 @@ var FileProcessor = function(file, directory, job, callback){
 		},
 
 		calculateDesination: function(error, image) {
-
+			
 	        if (error) {
 	            this.file.status = "Failed";
 	            this.file.scenario = "Exif Error: " + error.message;
@@ -87,11 +89,15 @@ var FileProcessor = function(file, directory, job, callback){
 	            	this.report.destination = destinationDirectory;
 	            	
 	            	if(this.job.dryrun) {  
-	            		this.file.status = "Success";
 						this.callback({status:"success", file:this.report});
 					} else {
 						this.copy();
 					}
+	        	} else {
+	        		console.log(image.exif);
+		            this.file.status = "Failed";
+		            this.file.scenario = "Date Error:  No exif.CreateDate value";
+		            this.callback({status:"noexif", file:this.report});	        		
 	        	}
 	        }
 			
@@ -137,6 +143,14 @@ var FileProcessor = function(file, directory, job, callback){
 		},
 
 		success: function(ex) {
+			if(this.job.move) {
+				fs.unlink(this.report.source, this.unlink);
+			} else {
+				this.callback({status:"success", file:this.report});
+			}
+		},
+
+		unlink: function(err) {
 			this.callback({status:"success", file:this.report});
 		}
 

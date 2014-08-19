@@ -11,7 +11,11 @@ var organize = function(){
 
 	return {
 
-		args: {},
+		args: {
+			recursive: true,
+			move: false,
+			dryrun: false
+		},
 
 		report: {},
 
@@ -38,7 +42,7 @@ var organize = function(){
 
 			if(exists) {
 
-				this.args = require(cwd + '/config.json');
+				this.args = _.extend(this.args, require(cwd + '/config.json'));
 				this.beginProcess();
 
 			} else {
@@ -71,7 +75,14 @@ var organize = function(){
 					throw Error('Invalid argument(s) : Example --param="value".');
 				}
 				var stripDashes = arg.replace("--", "");
-				this.args[stripDashes.split("=")[0]] = stripDashes.split("=")[1];
+				if(stripDashes.split("=")[1] == "true") {
+					this.args[stripDashes.split("=")[0]] = true;
+				} else if (stripDashes.split("=")[1] == "false") {
+					this.args[stripDashes.split("=")[0]] = false;
+				} else {
+					this.args[stripDashes.split("=")[0]] = stripDashes.split("=")[1];
+				}
+
 			}
 
 		},

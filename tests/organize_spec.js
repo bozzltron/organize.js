@@ -14,7 +14,16 @@ describe("organize.js", function() {
         organize.parseArgs('--from=import', 2);
         organize.parseArgs('--to=Photos', 3);
 
-        expect(organize.args).toEqual({from:"import", to:"Photos"});
+        expect(organize.args).toEqual({recursive : true, move : false, dryrun : false, from:"import", to:"Photos"});
+    });
+
+    it("should override arguments", function(){
+
+        organize.parseArgs('--from=import', 2);
+        organize.parseArgs('--to=Photos', 3);
+        organize.parseArgs('--dryrun=true', 4);
+
+        expect(organize.args).toEqual({recursive : true, move : false, dryrun : true, from:"import", to:"Photos"});
     });
 
     it("should detect bad arguments", function(){
@@ -77,8 +86,8 @@ describe("organize.js", function() {
             "types": "jpg,png,jpeg,gif",
             "to": "[/Volumes/bozzldrive/Pictures]/YYYY/MM/DD",
             "recursive": false,
-            "copy": false,
-            "dryrun": false
+            "move": false,
+            "dryrun": true
         };
 
         fs.writeFileSync(process.cwd() + "/config.json", JSON.stringify(json));
@@ -94,10 +103,6 @@ describe("organize.js", function() {
         // Restore jasmine args
         process.argv = oldargs;
 
-    });
-
-    afterEach(function(){
-        
     });
 
 });

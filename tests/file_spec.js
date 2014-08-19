@@ -6,12 +6,12 @@ describe("fileProcessor.js", function() {
 
     var directory = process.cwd() + '/images';
     var job = {
-        "from": process.cwd() + "/images",
-        "types": "jpg,png,jpeg,gif",
-        "to": "[" + process.cwd() + "/jobtest]",
-        "recursive": false,
-        "copy": true,
-        "dryrun": false
+        from: process.cwd() + "/images",
+        types: "jpg,png,jpeg,gif",
+        to: "[" + process.cwd() + "/jobtest]",
+        recursive: false,
+        move: false,
+        dryrun: false
     };
 
     it("should detect a copy a file", function(done){
@@ -91,6 +91,43 @@ describe("fileProcessor.js", function() {
 
         file2.start();
 
-    })
+    });
+
+    it("should support moving files", function(){
+
+        var counter = 0;
+        var newJob = job;
+        newJob.move = true;
+        newJob.from = process.cwd() + "/jobtest",
+        newJob.to = "[" + process.cwd() + "/movetest]";
+
+        function isDone(report){
+            counter++;
+            if(counter == 2) {
+                done()
+            }
+        }  
+
+        var file1 = new FileProcessor("test.jpg", job.from, newJob, function(report){
+
+            // Source File should be deleted
+            var filePath = directory + "/jobtest/test.jpg";
+            fs.exists(filePath, function(exists){
+                expect(!exists).toEqual(true);
+                isDone(report);
+            });
+
+            // Destination file should be there
+            var filePath = directory + "/../movetest/test.jpg";
+            fs.exists(filePath, function(exists){
+                expect(exists).toEqual(true);
+                isDone(report);
+            });
+
+        });
+
+        file1.start();
+
+    });
 
 });

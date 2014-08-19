@@ -42,7 +42,7 @@ var Job = function(job, callback){
 		    if (err) {
 		        console.log(err);
 		    }
-	
+			
 		    this.files = files;
 		    this.index = 0;
 		    this.files.forEach(this.processFile);
@@ -110,8 +110,6 @@ var Job = function(job, callback){
            _.each(this.report.ext, function(num, ext){
                console.log("	Found " + num + " " + ext + " files.");
            });
-           
-           console.log(this.processedFiles);
 
        }
 
