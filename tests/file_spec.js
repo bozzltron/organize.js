@@ -93,7 +93,7 @@ describe("fileProcessor.js", function() {
 
     });
 
-    it("should support moving files", function(){
+    it("should support moving files", function(done){
 
         var counter = 0;
         var newJob = job;
@@ -104,7 +104,7 @@ describe("fileProcessor.js", function() {
         function isDone(report){
             counter++;
             if(counter == 2) {
-                done()
+                done();
             }
         }  
 
@@ -127,6 +127,19 @@ describe("fileProcessor.js", function() {
         });
 
         file1.start();
+
+    });
+
+    it("should handle ctime", function(done){
+
+        var file = new FileProcessor("test.jpg", directory, job, function(report){
+      
+            expect(file.report.created).toBe('Mon Aug 18 2014 22:12:07 GMT-0500 (CDT)');
+            done();
+
+        });
+
+        file.start();
 
     });
 

@@ -42,7 +42,8 @@ var organize = function(){
 
 			if(exists) {
 
-				this.args = _.extend(this.args, require(cwd + '/config.json'));
+				this.optArgs = this.args;
+				this.args = require(cwd + '/config.json');
 				this.beginProcess();
 
 			} else {
@@ -58,8 +59,13 @@ var organize = function(){
 			if(_.isArray(this.args)) {
 
 				this.processed = 0;
-				new Job(this.args[0], this.jobDone).start();
 
+				_.each(this.args, function(job){
+					var argsMerge = {};
+					_.extend(argsMerge, this.optArgs, job);
+					new Job(argsMerge, this.jobDone).start();
+				})
+				
 			} else {
 
 				new Job(this.args, this.jobDone).start();

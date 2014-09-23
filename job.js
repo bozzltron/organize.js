@@ -25,7 +25,7 @@ var Job = function(job, callback){
 		start: function() {
 
 			_.bindAll(this, 'getFiles', 'fileDone', 'processFile', 'writeReport');
-			
+
 			this.job = job;
 			this.callback = callback;
 			this.job.files = [];
@@ -50,7 +50,9 @@ var Job = function(job, callback){
 
 		fileDone:function(report) {
 
-			report.file.print();
+			if(report.file) {
+				report.file.print();
+			}
 
 			switch(report.status){
 				case "directory":

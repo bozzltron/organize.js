@@ -19,6 +19,7 @@ node organize.js
 Example config.json
 
 ```javascript
+[
     {
       "from" : "import",  
       "types": "mp4, 3pg, mov, avi, mpg",
@@ -27,6 +28,7 @@ Example config.json
       "move": true,
       "dryrun": false
     }
+]
 ```
 
 ## Parameters

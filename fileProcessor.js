@@ -55,13 +55,31 @@ var FileProcessor = function(file, directory, job, callback){
 
 			} else {
 							
-				// handle file
+				this.report.times = [];
+
+				// check stats for ctime
+				if(stat.ctime){
+					this.report.created = stat.ctime;
+					this.report.times.push( new Date(stat.ctime).getTime() );
+				}
+
+				if(stat.mtime){
+					this.report.modified = stat.mtime;
+					this.report.times.push( new Date(stat.mtime).getTime() );
+				}
+
+				if(stat.atime){
+					this.report.accessed = stat.atime;
+					this.report.times.push( new Date(stat.atime).getTime() );
+				}
+
+				// get files extension
 				this.report.ext = path.extname(this.file).replace(".","").toLowerCase();
 				if( _.contains( this.job.types.split(','), this.report.ext ) ) {
 					this.getExif();
 				} else {
 					this.report.status = "Ignored";
-					this.report.scenario = "This is not the type your're looking for.";
+					this.report.scenario = "This is not the type you're looking for.";
 					this.callback({status:"noext", file: this.report});
 				}
 
@@ -75,30 +93,28 @@ var FileProcessor = function(file, directory, job, callback){
 
 		calculateDesination: function(error, image) {
 			
-	        if (error) {
-	            this.file.status = "Failed";
-	            this.file.scenario = "Exif Error: " + error.message;
-	            this.callback({status:"noexif", file:this.report});
-	        }
-	        else {
-
+			// Look for a Created Date in the EXIF data
+	        if (!error) {
 	        	if(image.exif.CreateDate) {
-		        	var colons = /\:/gi;
-		        	var date = new Date(image.exif.CreateDate.split(" ")[0].replace(colons,"-"));
-	            	var destinationDirectory = moment(date).format(this.job.to);
-	            	this.report.destination = destinationDirectory;
-	            	
-	            	if(this.job.dryrun) {  
-						this.callback({status:"success", file:this.report});
-					} else {
-						this.copy();
-					}
-	        	} else {
-		            this.file.status = "Failed";
-		            this.file.scenario = "Date Error:  No exif.CreateDate value";
-		            this.callback({status:"noexif", file:this.report});	        		
-	        	}
-	        }
+					var date = new Date(image.exif.CreateDate.split(" ")[0].split(":").join("-"));
+					var oneDay = 86400000;
+					this.report.times.push( date.getTime() + oneDay );
+				} 
+			}
+
+			// Smart creation detection takes the earliest date from :
+			// last accessed, modified, created, and EXIF
+			this.report.times = _.sortBy(this.report.times, function(item){ return item; });
+
+			// Generate the destination        
+        	var date = new Date(this.report.times[0]);
+        	this.report.destination = moment(date).format(this.job.to);
+        	
+        	if(this.job.dryrun) {  
+				this.callback({status:"success", file:this.report});
+			} else {
+				this.copy();
+			}      
 			
 		},
 
