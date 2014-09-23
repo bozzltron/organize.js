@@ -56,7 +56,7 @@ var FileProcessor = function(file, directory, job, callback){
 			} else {
 							
 				// handle file
-				this.report.ext = path.extname(this.file).replace(".","");
+				this.report.ext = path.extname(this.file).replace(".","").toLowerCase();
 				if( _.contains( this.job.types.split(','), this.report.ext ) ) {
 					this.getExif();
 				} else {
@@ -94,7 +94,6 @@ var FileProcessor = function(file, directory, job, callback){
 						this.copy();
 					}
 	        	} else {
-	        		console.log(image.exif);
 		            this.file.status = "Failed";
 		            this.file.scenario = "Date Error:  No exif.CreateDate value";
 		            this.callback({status:"noexif", file:this.report});	        		

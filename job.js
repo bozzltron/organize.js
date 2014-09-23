@@ -25,8 +25,7 @@ var Job = function(job, callback){
 		start: function() {
 
 			_.bindAll(this, 'getFiles', 'fileDone', 'processFile', 'writeReport');
-
-			//console.log("processing job", job);
+			
 			this.job = job;
 			this.callback = callback;
 			this.job.files = [];
@@ -40,7 +39,7 @@ var Job = function(job, callback){
 		getFiles: function (err, files) {
 
 		    if (err) {
-		        console.log(err);
+		        console.log(err, arguments);
 		    }
 			
 		    this.files = files;

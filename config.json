@@ -1,10 +1,8 @@
-[
-    {
-    	"from": "/Volumes/bozzldrive/Import",
-		"types": "jpg,png,jpeg,gif",
-		"to": "[/Volumes/bozzldrive]/YYYY/MM/DD",
-		"recursive": true,
-		"copy": false,
-		"dryrun": true
-	}
-]
+{
+	"from": "/Volumes/bozzldrive/Importx",
+	"types": "jpg,png,jpeg,gif,vob,mp4,mov",
+	"to": "[/Volumes/bozzldrive]/YYYY/MM/DD",
+	"recursive": true,
+	"move": true,
+	"dryrun": false
+}

@@ -19,7 +19,6 @@ node organize.js
 Example config.json
 
 ```javascript
-  [
     {
       "from" : "import",  
       "types": "mp4, 3pg, mov, avi, mpg",
@@ -27,13 +26,7 @@ Example config.json
       "recursive": true,
       "move": true,
       "dryrun": false
-    },
-      {
-      "from" : "import",
-      "types": "jpg, png, jpeg, gif",
-      "to": "[Pictures]/YYYY/MM-MMMM"
     }
-  ]
 ```
 
 ## Parameters
