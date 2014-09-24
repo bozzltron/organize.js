@@ -2,7 +2,7 @@ A nodejs file organization tool.
 
 ##Why organize.js?
 
-I began a large project to organize personal photos and videos over the last 14 years.  I really wanted the ability to sort photos and video into chronological directory structure.  There is existing software options out there, but I thought it would be fun to write my own.  Organize.js works by copying files of a certain type from a source directory into a destination that is decided based on a pattern.  Under the hood, organize.js is asychronously stream up to 10 files as a time until the job is done.  I've used it to sort up over 2,000 files in a single job.  
+I began a large project to organize personal photos and videos over the last 14 years.  I really wanted the ability to sort photos and video into chronological directory structure.  There is existing software options out there, but I thought it would be fun to write my own.  Organize.js works by copying files of a certain type from a source directory into a destination that is decided based on a pattern.  Under the hood, organize.js is asychronously streaming up to 10 files as a time until the job is done.  I've used it to sort up over 2,000 files in a single job.  
 
 ##Disclaimer
 I've only tested this on Mac machine with an external hard drive. 
