@@ -1,9 +1,9 @@
 [
     {
     	"from": "/Volumes/bozzldrive/Import",
-		"types": "jpg,png,jpeg,gif",
+		"types": "jpg,png,jpeg,gif,mp4,vob,mov",
 		"to": "[/Volumes/bozzldrive]/YYYY/MM/DD",
-		"recursive": false,
+		"recursive": true,
 		"move": true,
 		"dryrun": false
 	}

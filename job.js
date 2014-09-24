@@ -44,7 +44,18 @@ var Job = function(job, callback){
 			
 		    this.files = files;
 		    this.index = 0;
-		    this.files.forEach(this.processFile);
+		    var initFiles = [];
+		    
+		    // so we are not copying too many files at once 
+		    // let's throttle to ten at one time
+		    if(files.length > 10) {
+		    	initFiles = this.files.slice(0 ,10);
+		    	this.queue = _.difference(this.files, initFiles);
+			} else {
+				initFiles = this.queue = this.files;
+			}
+
+		    initFiles.forEach(this.processFile);
 		   
 		},
 
@@ -58,7 +69,9 @@ var Job = function(job, callback){
 				case "directory":
 
 					this.report.directory++;
+
 					if(this.job.recursive) {	
+						console.log("dir");
 						var job = _.clone(this.job);
 						job.from = report.file.source;
 						new Job(job, this.fileDone).start();
@@ -91,7 +104,10 @@ var Job = function(job, callback){
 			if(this.processed == this.files.length) {
 				this.endTime = new Date().getTime();
 				this.writeReport();
-				this.callback(this.job);
+			}
+
+			if(this.queue.length > 0){
+				this.processFile(this.queue.pop());
 			}
 
 		},
